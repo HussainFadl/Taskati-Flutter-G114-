@@ -1,17 +1,17 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
-import 'package:taskati_project/Core/Util/App_Images.dart';
+import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
+import 'package:taskati_project/Featuers/home_view.dart';
 
 
 
 String? path;
+String name = '';
 
 class UpLoadView extends StatefulWidget {
   const UpLoadView({super.key});
@@ -32,7 +32,28 @@ class _UpLoadViewState extends State<UpLoadView> {
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //name and image are ok
+                    if (path != null && name.isNotEmpty){
+                      AppFunctions.getMoveToNextPage(context: context, 
+                      theScreenYouWantToProceed:const  HomeView());
+                     // no image
+                    }else if (path == null && name.isNotEmpty){
+                      AppFunctions.showMySnackBar(context, 'You need to upload your Image !!');
+                    // no name
+                    }else if (path != null && name.isEmpty){
+                      AppFunctions.showMySnackBar(context, 'You need to register your Name !!');
+                     AppFunctions.getMoveToNextPage(context: context, 
+                      theScreenYouWantToProceed:const  HomeView());
+                     //no image and no name
+                    }else{
+                      AppFunctions.showMySnackBar(context, 'You need to upload your Image,\n and register your Name !! ');
+
+                    }
+                    
+                    
+                    
+                  },
                   child: Text('Done', style: getSmallStyle(fontSize: 20))),
             ),
           ],
@@ -80,8 +101,12 @@ class _UpLoadViewState extends State<UpLoadView> {
                 SizedBox(
                   width: 350,
                   child: TextFormField(
+                    // inputFormatters: [
+                    //   FilteringTextInputFormatter.digitsOnly
+                    // ],
                     decoration: InputDecoration(
-                      hintText: 'Enter Your Name',
+                      hintText: 'Enter Your Name ...',
+                      
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(
@@ -99,6 +124,11 @@ class _UpLoadViewState extends State<UpLoadView> {
                           )
                         )      
                             ),
+                            onChanged: (value) {
+                     setState(() {
+                       value = name;
+                     });
+                   },
                   ),
                 ),
                // Image(image: AppImages.getMyFavouriteImage(assetName: 'Assets/accountImage.svg') as ImageProvider ),
