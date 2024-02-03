@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
 import 'package:taskati_project/Core/Util/App_Functions.dart';
@@ -13,7 +15,9 @@ import 'package:taskati_project/Featuers/home_view.dart';
 String? path;
 String name = '';
 
-class UpLoadView extends StatefulWidget {
+
+
+class UpLoadView extends StatefulWidget  {
   const UpLoadView({super.key});
 
   @override
@@ -35,24 +39,25 @@ class _UpLoadViewState extends State<UpLoadView> {
                   onPressed: () {
                     //name and image are ok
                     if (path != null && name.isNotEmpty){
+
+                      AppLocal.cacheData(AppLocal.IMAGE_KEY, path);
+                      AppLocal.cacheData(AppLocal.NAME_KEY, name);
+                      AppLocal.cacheData(AppLocal.ISUPLOAD_KEY, true);
+
                       AppFunctions.getMoveToNextPage(context: context, 
-                      theScreenYouWantToProceed:const  HomeView());
+                      theScreenYouWantToProceed:const HomeView());
+
                      // no image
                     }else if (path == null && name.isNotEmpty){
                       AppFunctions.showMySnackBar(context, 'You need to upload your Image !!');
                     // no name
                     }else if (path != null && name.isEmpty){
                       AppFunctions.showMySnackBar(context, 'You need to register your Name !!');
-                     AppFunctions.getMoveToNextPage(context: context, 
-                      theScreenYouWantToProceed:const  HomeView());
+                     
                      //no image and no name
                     }else{
                       AppFunctions.showMySnackBar(context, 'You need to upload your Image,\n and register your Name !! ');
-
                     }
-                    
-                    
-                    
                   },
                   child: Text('Done', style: getSmallStyle(fontSize: 20))),
             ),
@@ -101,9 +106,16 @@ class _UpLoadViewState extends State<UpLoadView> {
                 SizedBox(
                   width: 350,
                   child: TextFormField(
+                            onChanged: (value) {
+                     setState(() {
+                       name = value;
+                     });
+                   },
                     // inputFormatters: [
                     //   FilteringTextInputFormatter.digitsOnly
                     // ],
+                    // to connet wht is written inside the TextFormfield with the variable i will use as a condition
+                    keyboardType: TextInputType.name, 
                     decoration: InputDecoration(
                       hintText: 'Enter Your Name ...',
                       
@@ -124,11 +136,7 @@ class _UpLoadViewState extends State<UpLoadView> {
                           )
                         )      
                             ),
-                            onChanged: (value) {
-                     setState(() {
-                       value = name;
-                     });
-                   },
+                    
                   ),
                 ),
                // Image(image: AppImages.getMyFavouriteImage(assetName: 'Assets/accountImage.svg') as ImageProvider ),

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
@@ -14,6 +17,14 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  String? name;
+  String? path;
+  @override
+  void initState(){
+    super.initState();
+    path = AppLocal.getCacheData(AppLocal.IMAGE_KEY);
+    name = AppLocal.getCacheData(AppLocal.NAME_KEY);
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,8 +51,8 @@ class _HomeViewState extends State<HomeView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello, Hussain',
-                        style: getTitleStyle(color: AppColors.primaryColor),
+                        '''Hello, $name''',
+                        style: getBodyStyle(color: AppColors.primaryColor),
                       ),
                       Text(
                         'Have a nice day',
@@ -50,13 +61,14 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                   const Spacer(),
-                  const CircleAvatar(
-                    backgroundImage: AssetImage('Assets/accountingImage.png'),
+                   CircleAvatar(
+                    backgroundImage: path != null? FileImage(File(path!)) as ImageProvider
+                    : const  AssetImage('Assets/accountingImage.png'),
                     maxRadius: 25,
                   )
                 ],
               ),
-              Gap(10),
+              const Gap(10),
               Row(
                 children: [
                   Text(
@@ -78,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
                 'Today',
                 style: getTitleStyle(),
               ),
-              Gap(20),
+              const Gap(20),
 
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +114,7 @@ class _HomeViewState extends State<HomeView> {
               Expanded(
                 child: ListView.builder(itemCount: 3,itemBuilder: (context, index){
                    return  Container(
-                    margin: EdgeInsets.all(10),
+                    margin:const  EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(15),
@@ -136,7 +148,7 @@ class _HomeViewState extends State<HomeView> {
                               )),
                             ],
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Container(
                             height: 70,
                             width: 0.5,
@@ -145,7 +157,7 @@ class _HomeViewState extends State<HomeView> {
                               shape: BoxShape.rectangle,
                             ),
                           ),
-                          Gap(10),
+                         const  Gap(10),
                           RotatedBox(
                             quarterTurns: 3,
                             child: Text('TO DO',

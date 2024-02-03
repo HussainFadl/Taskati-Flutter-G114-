@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:taskati_project/Featuers/splash_view.dart';
 
-void main() {
+void main() async {
+  // initializes HiveFlutter
+  await Hive.initFlutter();
+  // open Box to store any data allover the application
+  await Hive.openBox('user') ;
   runApp(const MyApp());
 
   
