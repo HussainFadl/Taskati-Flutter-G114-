@@ -30,13 +30,14 @@ environment:
 #اي مكتبة خارجية تنضاف تحت الdependencies
 dependencies:
   cupertino_icons: ^1.0.2
+  date_picker_timeline: ^1.2.5
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.9
   gap: ^3.0.1
   google_fonts: ^6.1.0
   image_picker: ^1.0.7
-  intl: ^0.19.0
+  intl: ^0.18.0
   lottie: ^3.0.0
 
 dev_dependencies:
