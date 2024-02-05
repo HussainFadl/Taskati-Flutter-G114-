@@ -17,7 +17,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState(){
     super.initState();
-    bool isUpLoad = AppLocal.getCacheData(AppLocal.ISUPLOAD_KEY);
+    bool isUpLoad = AppLocal.getCacheData(AppLocal.ISUPLOAD_KEY)?? false;
     print(AppLocal.getCacheData(AppLocal.NAME_KEY));
     print(AppLocal.getCacheData(AppLocal.IMAGE_KEY));
     Future.delayed(

@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
+import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
+import 'package:taskati_project/Featuers/AddTask/add_task_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -20,11 +22,12 @@ class _HomeViewState extends State<HomeView> {
   String? name;
   String? path;
   @override
-  void initState(){
+  void initState() {
     super.initState();
     path = AppLocal.getCacheData(AppLocal.IMAGE_KEY);
     name = AppLocal.getCacheData(AppLocal.NAME_KEY);
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,9 +64,10 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                   const Spacer(),
-                   CircleAvatar(
-                    backgroundImage: path != null? FileImage(File(path!)) as ImageProvider
-                    : const  AssetImage('Assets/accountingImage.png'),
+                  CircleAvatar(
+                    backgroundImage: path != null
+                        ? FileImage(File(path!)) as ImageProvider
+                        : const AssetImage('Assets/accountingImage.png'),
                     maxRadius: 25,
                   )
                 ],
@@ -80,9 +84,19 @@ class _HomeViewState extends State<HomeView> {
                   SizedBox(
                     height: 50,
                     child: CustomButton(
-                      text: '+ Add Task',
-                      onPressed: () {},
-                    ),
+                        text: '+ Add Task',
+                        onPressed: () {
+                          // var pickedTime = showTimePicker(
+                          //     context: context, initialTime: TimeOfDay.now());
+                          // if (pickedTime !=null){
+                          //   setState(() {
+
+                          //   });
+                          // }
+
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => AddTaskView()));
+                        }),
                   )
                 ],
               ),
@@ -112,66 +126,70 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
               Expanded(
-                child: ListView.builder(itemCount: 3,itemBuilder: (context, index){
-                   return  Container(
-                    margin:const  EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(15),
-
-                    ),
-                    child:  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
+                child: ListView.builder(
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('data',
-                              style: TextStyle(
-                                color: AppColors.whiteColor,
-                              ),
-                              ),
-                              Row(
+                              Column(
                                 children: [
-                                  Icon(Icons.watch_later_outlined,
-                                  color: AppColors.whiteColor,),
+                                  Text(
+                                    'data',
+                                    style: TextStyle(
+                                      color: AppColors.whiteColor,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.watch_later_outlined,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                      Text(
+                                        'data',
+                                        style: TextStyle(
+                                            color: AppColors.whiteColor),
+                                      ),
+                                    ],
+                                  ),
                                   Text('data',
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor
-                                  ),),
+                                      style: TextStyle(
+                                          color: AppColors.whiteColor)),
                                 ],
                               ),
-                              Text('data',
-                              style: TextStyle(
-                                color: AppColors.whiteColor
-                              )),
+                              const Spacer(),
+                              Container(
+                                height: 70,
+                                width: 0.5,
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  shape: BoxShape.rectangle,
+                                ),
+                              ),
+                              const Gap(10),
+                              RotatedBox(
+                                quarterTurns: 3,
+                                child: Text(
+                                  'TO DO',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.whiteColor),
+                                ),
+                              ),
                             ],
                           ),
-                          const Spacer(),
-                          Container(
-                            height: 70,
-                            width: 0.5,
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              shape: BoxShape.rectangle,
-                            ),
-                          ),
-                         const  Gap(10),
-                          RotatedBox(
-                            quarterTurns: 3,
-                            child: Text('TO DO',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.whiteColor
-                            ),),
-                          ),
-                        ],
-                      ),
-                    ),
-                    
-                  );
-                }),
+                        ),
+                      );
+                    }),
               )
             ],
           ),
