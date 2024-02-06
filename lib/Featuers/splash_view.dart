@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:taskati_project/Core/NetWork/local_storage.dart';
+import 'package:taskati_project/Core/Util/App_Colors.dart';
 import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
 import 'package:taskati_project/Featuers/home_view.dart';
@@ -15,39 +16,41 @@ class SplashView extends StatefulWidget {
 
 class _SplashViewState extends State<SplashView> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    bool isUpLoad = AppLocal.getCacheData(AppLocal.ISUPLOAD_KEY)?? false;
+    bool isUpLoad = AppLocal.getCacheData(AppLocal.ISUPLOAD_KEY) ?? false;
     print(AppLocal.getCacheData(AppLocal.NAME_KEY));
     print(AppLocal.getCacheData(AppLocal.IMAGE_KEY));
-    Future.delayed(
-      const Duration(seconds: 5),(){
-       AppFunctions.getMoveToNextPage(
-        context: context, 
-       theScreenYouWantToProceed: isUpLoad? const HomeView():const  UpLoadView() );
-      }
-      
-    );
-    
+    Future.delayed(const Duration(seconds: 5), () {
+      AppFunctions.getMoveToNextPage(
+          context: context,
+          theScreenYouWantToProceed:
+              isUpLoad ? const HomeView() : const UpLoadView());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Padding(
-        padding: const EdgeInsets.only(top: 100,right: 30),
+        padding: const EdgeInsets.only(top: 100, right: 30),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Lottie.asset('Assets/AnimationTskati.json',
-              width: 400,
-              height: 400),
-              Text('Taskati',
-              style: getTitleStyle(fontSize: 20)),
-              Text('It\'s time to get Organized',
-              style: getSmallStyle(fontSize: 10),),
+                  width: 400, height: 400),
+              Text('''Taskati''',
+                  style:
+                      getTitleStyle(fontSize: 20, color: AppColors.whiteColor)),
+              Text(
+                '...   نظّم وقتك تنجز مهامك',
+                 style: TextStyle(color: AppColors.whiteColor),
+              ),
+              Text(
+                'It\'s time to get Organized ...',
+                 style: getSmallStyle(fontSize: 10, color: AppColors.whiteColor),
+              ),
             ],
           ),
         ),

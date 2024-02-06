@@ -34,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 25,
-          backgroundColor: AppColors.greyColor,
+          backgroundColor: Colors.blue[200],
           title: Text(
             'I am AppBar',
             style: getTitleStyle(),
@@ -55,11 +55,12 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Text(
                         '''Hello, $name''',
-                        style: getBodyStyle(color: AppColors.primaryColor),
+                        style: getBodyStyle(color: AppColors.greyColor),
                       ),
                       Text(
                         'Have a nice day',
-                        style: getSmallStyle(color: AppColors.blackColor),
+                        style: TextStyle(color: Colors.white),
+                        //Theme.of(context).textTheme.displayMedium
                       ),
                     ],
                   ),
@@ -76,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
               Row(
                 children: [
                   Text(
-                      style: getTitleStyle(),
+                      style: getTitleStyle(color: Colors.white),
                       DateFormat.yMMMd().format(
                         DateTime.now(),
                       )),
@@ -95,14 +96,14 @@ class _HomeViewState extends State<HomeView> {
                           // }
 
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => AddTaskView()));
+                              builder: (context) => const AddTaskView()));
                         }),
                   )
                 ],
               ),
               Text(
                 'Today',
-                style: getTitleStyle(),
+                style: getTitleStyle(color: AppColors.whiteColor),
               ),
               const Gap(20),
 
@@ -114,6 +115,9 @@ class _HomeViewState extends State<HomeView> {
                     initialSelectedDate: DateTime.now(),
                     selectionColor: AppColors.primaryColor,
                     selectedTextColor: Colors.white,
+                    dateTextStyle: TextStyle(color: Colors.white),
+                    monthTextStyle: TextStyle(color: Colors.grey[100]),
+                    dayTextStyle: TextStyle(color: AppColors.whiteColor),
                     onDateChange: (date) {
                       // New date selected
                       // setState(() {
