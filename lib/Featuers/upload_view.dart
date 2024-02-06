@@ -10,14 +10,10 @@ import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
 import 'package:taskati_project/Featuers/home_view.dart';
 
-
-
 String? path;
 String name = '';
 
-
-
-class UpLoadView extends StatefulWidget  {
+class UpLoadView extends StatefulWidget {
   const UpLoadView({super.key});
 
   @override
@@ -25,7 +21,6 @@ class UpLoadView extends StatefulWidget  {
 }
 
 class _UpLoadViewState extends State<UpLoadView> {
-  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,25 +33,28 @@ class _UpLoadViewState extends State<UpLoadView> {
               child: TextButton(
                   onPressed: () {
                     //name and image are ok
-                    if (path != null && name.isNotEmpty){
-
+                    if (path != null && name.isNotEmpty) {
                       AppLocal.cacheData(AppLocal.IMAGE_KEY, path);
                       AppLocal.cacheData(AppLocal.NAME_KEY, name);
                       AppLocal.cacheData(AppLocal.ISUPLOAD_KEY, true);
 
-                      AppFunctions.getMoveToNextPage(context: context, 
-                      theScreenYouWantToProceed:const HomeView());
+                      AppFunctions.getMoveToNextPage(
+                          context: context,
+                          theScreenYouWantToProceed: const HomeView());
 
-                     // no image
-                    }else if (path == null && name.isNotEmpty){
-                      AppFunctions.showMySnackBar(context, 'You need to upload your Image !!');
-                    // no name
-                    }else if (path != null && name.isEmpty){
-                      AppFunctions.showMySnackBar(context, 'You need to register your Name !!');
-                     
-                     //no image and no name
-                    }else{
-                      AppFunctions.showMySnackBar(context, 'You need to upload your Image,\n and register your Name !! ');
+                      // no image
+                    } else if (path == null && name.isNotEmpty) {
+                      AppFunctions.showMySnackBar(
+                          context, 'You need to upload your Image !!');
+                      // no name
+                    } else if (path != null && name.isEmpty) {
+                      AppFunctions.showMySnackBar(
+                          context, 'You need to register your Name !!');
+
+                      //no image and no name
+                    } else {
+                      AppFunctions.showMySnackBar(context,
+                          'You need to upload your Image,\n and register your Name !! ');
                     }
                   },
                   child: Text('Done', style: getSmallStyle(fontSize: 20))),
@@ -71,10 +69,11 @@ class _UpLoadViewState extends State<UpLoadView> {
                 //const Gap(45),
                 CircleAvatar(
                   radius: 70,
-                  backgroundImage: (path != null)?FileImage(File(path!)) as ImageProvider
-                  : const AssetImage('Assets/accountingImage.png'), 
+                  backgroundImage: (path != null)
+                      ? FileImage(File(path!)) as ImageProvider
+                      : const AssetImage('Assets/accountingImage.png'),
                 ),
-               const Gap(40),
+                const Gap(40),
                 SizedBox(
                   height: 50,
                   width: 250,
@@ -89,9 +88,9 @@ class _UpLoadViewState extends State<UpLoadView> {
                 SizedBox(
                   height: 50,
                   width: 250,
-                  child:
-                      CustomButton(
-                        text: 'UpLoad from Gallery', onPressed: () {
+                  child: CustomButton(
+                      text: 'UpLoad from Gallery',
+                      onPressed: () {
                         upLoadFromGallery();
                       }),
                 ),
@@ -106,42 +105,37 @@ class _UpLoadViewState extends State<UpLoadView> {
                 SizedBox(
                   width: 350,
                   child: TextFormField(
-                            onChanged: (value) {
-                     setState(() {
-                       name = value;
-                     });
-                   },
+                    onChanged: (value) {
+                      setState(() {
+                        name = value;
+                      });
+                    },
                     // inputFormatters: [
                     //   FilteringTextInputFormatter.digitsOnly
                     // ],
                     // to connet wht is written inside the TextFormfield with the variable i will use as a condition
-                    keyboardType: TextInputType.name, 
+                    keyboardType: TextInputType.name,
                     decoration: InputDecoration(
-                      hintText: 'Enter Your Name ...',
-                      
+                        hintText: 'Enter Your Name ...',
                         enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              color: AppColors.primaryColor,
-                            ),),
-                        focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide(
                             color: AppColors.primaryColor,
-                          )), 
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: AppColors.primaryColor,
+                            )),
                         errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            color: AppColors.redColor,
-                          )
-                        )      
-                            ),
-                    
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: AppColors.redColor,
+                            ))),
                   ),
                 ),
-               // Image(image: AppImages.getMyFavouriteImage(assetName: 'Assets/accountImage.svg') as ImageProvider ),
-               
-               
+                // Image(image: AppImages.getMyFavouriteImage(assetName: 'Assets/accountImage.svg') as ImageProvider ),
               ],
             ),
           ),
@@ -151,23 +145,21 @@ class _UpLoadViewState extends State<UpLoadView> {
   }
 
   upLoadFromCamera() async {
-  var pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
-  if(pickedImage != null){
-    setState((){
-      path = pickedImage.path;
-    });
+    var pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedImage != null) {
+      setState(() {
+        path = pickedImage.path;
+      });
+    }
+  }
+
+  upLoadFromGallery() async {
+    var pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        path = pickedImage.path;
+      });
+    }
   }
 }
-
-upLoadFromGallery() async {
-  var pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-  if(pickedImage != null){
-    setState((){
-      path = pickedImage.path;
-    });
-  }
-}
-
-}
-
-
