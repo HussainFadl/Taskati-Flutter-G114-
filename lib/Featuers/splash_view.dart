@@ -4,7 +4,7 @@ import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
 import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
-import 'package:taskati_project/Featuers/home_view.dart';
+import 'package:taskati_project/Featuers/Home/home_view.dart';
 import 'package:taskati_project/Featuers/upload_view.dart';
 
 class SplashView extends StatefulWidget {
@@ -40,16 +40,14 @@ class _SplashViewState extends State<SplashView> {
             children: [
               Lottie.asset('Assets/AnimationTskati.json',
                   width: 400, height: 400),
-              Text('''Taskati''',
-                  style:
-                      getTitleStyle(fontSize: 20, color: AppColors.whiteColor)),
+              Text(
+                '''Taskati''',
+              ),
               Text(
                 '...   نظّم وقتك تنجز مهامك',
-                 style: TextStyle(color: AppColors.whiteColor),
               ),
               Text(
                 'It\'s time to get Organized ...',
-                 style: getSmallStyle(fontSize: 10, color: AppColors.whiteColor),
               ),
             ],
           ),

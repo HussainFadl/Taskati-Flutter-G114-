@@ -3,13 +3,15 @@ import 'dart:io';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:taskati_project/Core/Model/task_model.dart';
 import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
-import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
 import 'package:taskati_project/Featuers/AddTask/add_task_view.dart';
+import 'package:taskati_project/Featuers/Home/task_item.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -27,6 +29,8 @@ class _HomeViewState extends State<HomeView> {
     path = AppLocal.getCacheData(AppLocal.IMAGE_KEY);
     name = AppLocal.getCacheData(AppLocal.NAME_KEY);
   }
+
+  String selectedDate = DateFormat.yMd().format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +59,10 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Text(
                         '''Hello, $name''',
-                        style: getBodyStyle(color: AppColors.greyColor),
                       ),
-                      Text(
+                      const Text(
                         'Have a nice day',
                         style: TextStyle(color: Colors.white),
-                        //Theme.of(context).textTheme.displayMedium
                       ),
                     ],
                   ),
@@ -69,7 +71,7 @@ class _HomeViewState extends State<HomeView> {
                     backgroundImage: path != null
                         ? FileImage(File(path!)) as ImageProvider
                         : const AssetImage('Assets/accountingImage.png'),
-                    maxRadius: 25,
+                    maxRadius: 50,
                   )
                 ],
               ),
@@ -87,14 +89,6 @@ class _HomeViewState extends State<HomeView> {
                     child: CustomButton(
                         text: '+ Add Task',
                         onPressed: () {
-                          // var pickedTime = showTimePicker(
-                          //     context: context, initialTime: TimeOfDay.now());
-                          // if (pickedTime !=null){
-                          //   setState(() {
-
-                          //   });
-                          // }
-
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const AddTaskView()));
                         }),
@@ -119,10 +113,9 @@ class _HomeViewState extends State<HomeView> {
                     monthTextStyle: TextStyle(color: Colors.grey[100]),
                     dayTextStyle: TextStyle(color: AppColors.whiteColor),
                     onDateChange: (date) {
-                      // New date selected
-                      // setState(() {
-                      //   _selectedValue = date;
-                      // });
+                      setState(() {
+                        selectedDate = DateFormat.yMd().format(date);
+                      });
                     },
                     height: 114,
                     width: 75,
@@ -130,71 +123,85 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
               Expanded(
-                child: ListView.builder(
-                    itemCount: 3,
+                  child: ValueListenableBuilder<Box<TaskModel>>(
+                valueListenable: Hive.box<TaskModel>('task').listenable(),
+                builder: (context, Box<TaskModel> value, child) {
+                  List<TaskModel> tasks = [];
+                  for (var element in value.values) {
+                    if (selectedDate == element.date) {
+                      tasks.add(element);
+                    }
+                  }
+                  return tasks.isEmpty?  
+                      Center(child: Text('You Have no Tasks this day ...')):
+                   ListView.builder(
+                    itemCount: tasks.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Column(
+                      TaskModel task = tasks[index];
+                      return  
+                      Dismissible(
+                          key: UniqueKey(),
+                          background: Container(
+                            margin: EdgeInsets.all(30),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+                                  Icon(
+                                    Icons.check,
+                                    size: 40,
+                                  ),
                                   Text(
-                                    'data',
-                                    style: TextStyle(
-                                      color: AppColors.whiteColor,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.watch_later_outlined,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                      Text(
-                                        'data',
-                                        style: TextStyle(
-                                            color: AppColors.whiteColor),
-                                      ),
-                                    ],
-                                  ),
-                                  Text('data',
-                                      style: TextStyle(
-                                          color: AppColors.whiteColor)),
+                                    'Completed',
+                                    style:
+                                        TextStyle(color: AppColors.blackColor),
+                                  )
                                 ],
                               ),
-                              const Spacer(),
-                              Container(
-                                height: 70,
-                                width: 0.5,
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  shape: BoxShape.rectangle,
-                                ),
-                              ),
-                              const Gap(10),
-                              RotatedBox(
-                                quarterTurns: 3,
-                                child: Text(
-                                  'TO DO',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: AppColors.whiteColor),
-                                ),
-                              ),
-                            ],
+                            ),
+                            color: AppColors.greenColor,
                           ),
-                        ),
-                      );
-                    }),
-              )
+                          secondaryBackground: Container(
+                            margin: EdgeInsets.all(30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(
+                                  Icons.delete_forever_outlined,
+                                  size: 40,
+                                ),
+                                Text(
+                                  'Deleted',
+                                  style: TextStyle(color: AppColors.blackColor),
+                                )
+                              ],
+                            ),
+                            color: AppColors.redColor,
+                          ),
+                          onDismissed: (direction) {
+                            if (direction == DismissDirection.startToEnd) {
+                              // complete
+                              value.put(
+                                  task.id,
+                                  TaskModel(
+                                      id: task.id,
+                                      title: task.title,
+                                      note: task.note,
+                                      startTime: task.startTime,
+                                      endTime: task.endTime,
+                                      color: 3,
+                                      isCompleted: true,
+                                      date: task.date));
+                            } else {
+                              // delete
+                              value.delete(task.id);
+                            }
+                          },
+                          child: TaskCardItem(task: task));
+                    },
+                  );
+                },
+              ))
             ],
           ),
         ),

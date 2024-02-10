@@ -8,7 +8,7 @@ import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
 import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
-import 'package:taskati_project/Featuers/home_view.dart';
+import 'package:taskati_project/Featuers/Home/home_view.dart';
 
 String? path;
 String name = '';
@@ -68,7 +68,7 @@ class _UpLoadViewState extends State<UpLoadView> {
               children: [
                 //const Gap(45),
                 CircleAvatar(
-                  radius: 70,
+                  radius: 90,
                   backgroundImage: (path != null)
                       ? FileImage(File(path!)) as ImageProvider
                       : const AssetImage('Assets/accountingImage.png'),
@@ -115,13 +115,12 @@ class _UpLoadViewState extends State<UpLoadView> {
                     // ],
                     // to connet wht is written inside the TextFormfield with the variable i will use as a condition
                     keyboardType: TextInputType.name,
+                    //style: getBodyStyle(),
                     decoration: InputDecoration(
                         hintText: 'Enter Your Name ...',
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            color: AppColors.primaryColor,
-                          ),
+                          borderSide: BorderSide(),
                         ),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -135,7 +134,6 @@ class _UpLoadViewState extends State<UpLoadView> {
                             ))),
                   ),
                 ),
-                // Image(image: AppImages.getMyFavouriteImage(assetName: 'Assets/accountImage.svg') as ImageProvider ),
               ],
             ),
           ),
@@ -154,8 +152,8 @@ class _UpLoadViewState extends State<UpLoadView> {
   }
 
   upLoadFromGallery() async {
-    var pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    var pickedImage = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, requestFullMetadata: true);
     if (pickedImage != null) {
       setState(() {
         path = pickedImage.path;
