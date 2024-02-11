@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:taskati_project/Core/Model/task_model.dart';
 import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
+import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
 import 'package:taskati_project/Featuers/AddTask/add_task_view.dart';
+import 'package:taskati_project/Featuers/Home/profile_view.dart';
 import 'package:taskati_project/Featuers/Home/task_item.dart';
 
 class HomeView extends StatefulWidget {
@@ -58,31 +61,35 @@ class _HomeViewState extends State<HomeView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '''Hello, $name''',
+                        'Hello, $name',
                       ),
                       const Text(
                         'Have a nice day',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
                   const Spacer(),
-                  CircleAvatar(
-                    backgroundImage: path != null
-                        ? FileImage(File(path!)) as ImageProvider
-                        : const AssetImage('Assets/accountingImage.png'),
-                    maxRadius: 50,
-                  )
+                  GestureDetector(
+                      onTap: () {
+                        AppFunctions.getMoveToNextPage(
+                            context: context,
+                            theScreenYouWantToProceed: const ProfileView());
+                      },
+                      child: CircleAvatar(
+                        radius: 26,
+                        backgroundColor: AppColors.primaryColor,
+                        backgroundImage: path != null
+                            ? FileImage(File(path!)) as ImageProvider
+                            : const AssetImage('Assets/accountingImage.png'),
+                      ))
                 ],
               ),
               const Gap(10),
               Row(
                 children: [
-                  Text(
-                      style: getTitleStyle(color: Colors.white),
-                      DateFormat.yMMMd().format(
-                        DateTime.now(),
-                      )),
+                  Text(DateFormat.yMMMd().format(
+                    DateTime.now(),
+                  )),
                   const Spacer(),
                   SizedBox(
                     height: 50,
@@ -109,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
                     initialSelectedDate: DateTime.now(),
                     selectionColor: AppColors.primaryColor,
                     selectedTextColor: Colors.white,
-                    dateTextStyle: TextStyle(color: Colors.white),
+                    dateTextStyle: const TextStyle(color: Colors.white),
                     monthTextStyle: TextStyle(color: Colors.grey[100]),
                     dayTextStyle: TextStyle(color: AppColors.whiteColor),
                     onDateChange: (date) {
@@ -132,74 +139,84 @@ class _HomeViewState extends State<HomeView> {
                       tasks.add(element);
                     }
                   }
-                  return tasks.isEmpty?  
-                      Center(child: Text('You Have no Tasks this day ...')):
-                   ListView.builder(
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      TaskModel task = tasks[index];
-                      return  
-                      Dismissible(
-                          key: UniqueKey(),
-                          background: Container(
-                            margin: EdgeInsets.all(30),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.check,
-                                    size: 40,
+                  return tasks.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Lottie.asset('Assets/noTasks.json', height: 200),
+                              const Text('You Have no Tasks this day ...'),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            TaskModel task = tasks[index];
+                            return Dismissible(
+                                key: UniqueKey(),
+                                background: Container(
+                                  margin: const EdgeInsets.all(30),
+                                  color: AppColors.greenColor,
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const Icon(
+                                          Icons.check,
+                                          size: 40,
+                                        ),
+                                        Text(
+                                          'Completed',
+                                          style: TextStyle(
+                                              color: AppColors.blackColor),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  Text(
-                                    'Completed',
-                                    style:
-                                        TextStyle(color: AppColors.blackColor),
-                                  )
-                                ],
-                              ),
-                            ),
-                            color: AppColors.greenColor,
-                          ),
-                          secondaryBackground: Container(
-                            margin: EdgeInsets.all(30),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(
-                                  Icons.delete_forever_outlined,
-                                  size: 40,
                                 ),
-                                Text(
-                                  'Deleted',
-                                  style: TextStyle(color: AppColors.blackColor),
-                                )
-                              ],
-                            ),
-                            color: AppColors.redColor,
-                          ),
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.startToEnd) {
-                              // complete
-                              value.put(
-                                  task.id,
-                                  TaskModel(
-                                      id: task.id,
-                                      title: task.title,
-                                      note: task.note,
-                                      startTime: task.startTime,
-                                      endTime: task.endTime,
-                                      color: 3,
-                                      isCompleted: true,
-                                      date: task.date));
-                            } else {
-                              // delete
-                              value.delete(task.id);
-                            }
+                                secondaryBackground: Container(
+                                  margin: const EdgeInsets.all(30),
+                                  color: AppColors.redColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      const Icon(
+                                        Icons.delete_forever_outlined,
+                                        size: 40,
+                                      ),
+                                      Text(
+                                        'Deleted',
+                                        style: TextStyle(
+                                            color: AppColors.blackColor),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onDismissed: (direction) {
+                                  if (direction ==
+                                      DismissDirection.startToEnd) {
+                                    // complete
+                                    value.put(
+                                        task.id,
+                                        TaskModel(
+                                            id: task.id,
+                                            title: task.title,
+                                            note: task.note,
+                                            startTime: task.startTime,
+                                            endTime: task.endTime,
+                                            color: 3,
+                                            isCompleted: true,
+                                            date: task.date));
+                                  } else {
+                                    // delete
+                                    value.delete(task.id);
+                                  }
+                                },
+                                child: TaskCardItem(task: task));
                           },
-                          child: TaskCardItem(task: task));
-                    },
-                  );
+                        );
                 },
               ))
             ],

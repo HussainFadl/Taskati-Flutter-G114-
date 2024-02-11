@@ -7,10 +7,12 @@ final lightTheme = ThemeData(
     ///////// Text Style Theme //////////////
     scaffoldBackgroundColor: Colors.blue[200],
     textTheme: TextTheme(
-      displayLarge: getHeadlineStyle(color: AppColors.darkThemeColor),
-      displayMedium: getTitleStyle(color: AppColors.darkThemeColor),
-      displaySmall: getSmallStyle(color: AppColors.darkThemeColor),
+      displayLarge: getHeadlineStyle(),
+      displayMedium: getTitleStyle(),
+      displaySmall: getSmallStyle(),
     ),
+    dataTableTheme: DataTableThemeData(
+        dataTextStyle: TextStyle(backgroundColor: AppColors.blackColor)),
 
     /////////// AppBar Theme ////////////
     appBarTheme: AppBarTheme(
@@ -21,7 +23,8 @@ final lightTheme = ThemeData(
 
     ////////// Input Decoration Theme ////////////
     inputDecorationTheme: InputDecorationTheme(
-        contentPadding: const EdgeInsets.symmetric(vertical: 15),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primaryColor),
           borderRadius: BorderRadius.circular(15),
@@ -43,7 +46,8 @@ final lightTheme = ThemeData(
             MaterialStateColor.resolveWith((states) => AppColors.navyBlue),
         headerForegroundColor: AppColors.blackColor,
         dayOverlayColor:
-            MaterialStateColor.resolveWith((states) => AppColors.navyBlue)));
+            MaterialStateColor.resolveWith((states) => AppColors.blackColor,
+            )));
 
 ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -58,7 +62,7 @@ final darkTheme = ThemeData(
         elevation: 0.0),
     textTheme: Typography.whiteMountainView,
     inputDecorationTheme: InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: const TextStyle(color: Colors.grey),
         contentPadding: const EdgeInsets.symmetric(vertical: 15),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primaryColor),

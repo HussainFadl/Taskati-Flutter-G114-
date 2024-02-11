@@ -2,62 +2,60 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
 import 'package:taskati_project/Core/Util/App_Functions.dart';
-import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
 import 'package:taskati_project/Featuers/Home/home_view.dart';
 
-String? _Image;
-String name = '';
-
-class UpLoadView extends StatefulWidget {
-  const UpLoadView({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<UpLoadView> createState() => _UpLoadViewState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _UpLoadViewState extends State<UpLoadView> {
+class _ProfileViewState extends State<ProfileView> {
+  String name = '';
+  String? path;
+  late Box<bool> modeBox;
+
+  @override
+  void initState() {
+    super.initState();
+    path = AppLocal.getCacheData(AppLocal.NAME_KEY);
+    path = AppLocal.getCacheData(AppLocal.IMAGE_KEY);
+    modeBox = Hive.box('mode');
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isDark = modeBox.get('darkmode') ?? false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              AppFunctions.getMoveToNextPage(
+                  context: context,
+                  theScreenYouWantToProceed: const HomeView());
+            },
+          ),
           backgroundColor: AppColors.greyColor,
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: TextButton(
-                  onPressed: () {
-                    //name and image are ok
-                    if (_Image != null && name.isNotEmpty) {
-                      AppLocal.cacheData(AppLocal.IMAGE_KEY, _Image);
-                      AppLocal.cacheData(AppLocal.NAME_KEY, name);
-                      AppLocal.cacheData(AppLocal.ISUPLOAD_KEY, true);
-
-                      AppFunctions.getMoveToNextPage(
-                          context: context,
-                          theScreenYouWantToProceed: const HomeView());
-
-                      // no image
-                    } else if (_Image == null && name.isNotEmpty) {
-                      AppFunctions.showMySnackBar(
-                          context, 'You need to upload your Image !!');
-                      // no name
-                    } else if (_Image != null && name.isEmpty) {
-                      AppFunctions.showMySnackBar(
-                          context, 'You need to register your Name !!');
-
-                      //no image and no name
-                    } else {
-                      AppFunctions.showMySnackBar(context,
-                          'You need to upload your Image,\n and register your Name !! ');
-                    }
-                  },
-                  child: Text('Done', style: getSmallStyle(fontSize: 20))),
+            IconButton(
+              icon: Icon(isDark ? Icons.dark_mode : Icons.light_mode_outlined),
+              onPressed: () {
+                setState(() {
+                  modeBox.put('darkmode', !isDark);
+                });
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.only(right: 20),
             ),
           ],
         ),
@@ -69,8 +67,8 @@ class _UpLoadViewState extends State<UpLoadView> {
                 //const Gap(45),
                 CircleAvatar(
                   radius: 90,
-                  backgroundImage: (_Image != null)
-                      ? FileImage(File(_Image!)) as ImageProvider
+                  backgroundImage: (path != null)
+                      ? FileImage(File(path!)) as ImageProvider
                       : const AssetImage('Assets/accountingImage.png'),
                 ),
                 const Gap(40),
@@ -79,7 +77,7 @@ class _UpLoadViewState extends State<UpLoadView> {
                   width: 250,
                   child: CustomButton(
                     text: 'UpLoad from Camera',
-                    onPressed: () async {
+                    onPressed: () {
                       upLoadFromCamera();
                     },
                   ),
@@ -115,7 +113,7 @@ class _UpLoadViewState extends State<UpLoadView> {
                     // ],
                     // to connet wht is written inside the TextFormfield with the variable i will use as a condition
                     keyboardType: TextInputType.name,
-                    style: getBodyStyle(color: AppColors.whiteColor),
+                    //style: getBodyStyle(),
                     decoration: InputDecoration(
                         hintText: 'Enter Your Name ...',
                         enabledBorder: OutlineInputBorder(
@@ -143,23 +141,20 @@ class _UpLoadViewState extends State<UpLoadView> {
   }
 
   upLoadFromCamera() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    var pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedImage != null) {
-      AppLocal.cacheData(AppLocal.IMAGE_KEY, pickedImage.path);
       setState(() {
-        _Image = pickedImage.path;
+        path = pickedImage.path;
       });
     }
   }
 
   upLoadFromGallery() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    var pickedImage = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, requestFullMetadata: true);
     if (pickedImage != null) {
-      AppLocal.cacheData(AppLocal.IMAGE_KEY, pickedImage.path);
       setState(() {
-        _Image = pickedImage.path;
+        path = pickedImage.path;
       });
     }
   }

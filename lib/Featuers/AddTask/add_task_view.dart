@@ -4,10 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:taskati_project/Core/Model/task_model.dart';
-import 'package:taskati_project/Core/NetWork/local_storage.dart';
 import 'package:taskati_project/Core/Util/App_Buttons.dart';
 import 'package:taskati_project/Core/Util/App_Colors.dart';
-import 'package:taskati_project/Core/Util/App_Functions.dart';
 import 'package:taskati_project/Core/Util/App_Text_Styles.dart';
 import 'package:taskati_project/Featuers/Home/home_view.dart';
 
@@ -100,7 +98,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                 TextFormField(
                   readOnly: true,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
+                      contentPadding: const EdgeInsets.all(10),
                       hintText: date,
                       //s hintStyle: getSmallStyle(color: Colors.grey),
                       suffixIcon: IconButton(
@@ -173,7 +171,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                             : const SizedBox(),
                       ),
                     ),
-                    Gap(5),
+                    const Gap(5),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -201,7 +199,7 @@ class _AddTaskViewState extends State<AddTaskView> {
                             : const SizedBox(),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     SizedBox(
                         height: 60,
                         child: CustomButton(
