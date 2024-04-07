@@ -5,6 +5,8 @@ A new Flutter project.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
+this application concerns mainly on caching data locally.
+using Hive package which is good at storing primitive data and simple objects.
 
 A few resources to get you started if this is your first Flutter project:
 
